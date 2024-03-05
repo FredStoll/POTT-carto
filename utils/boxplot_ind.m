@@ -1,6 +1,6 @@
 %- individiual boxplots!
 
-function boxplot_ind(X,yl,wdth,colors)
+function drops_pos = boxplot_ind(X,yl,wdth,colors)
 
 
 % info for making boxplot
