@@ -161,10 +161,11 @@ periods_reac = {'STIM' , 'Stim_onset' ,  [100 700] ;
            %     'REW'  ,  'Rew_onset' ,  [100 700] };
                  'REW'  ,  'Rew_onset' ,  [100 600] };
 periods2compare = [1 2 ; 1 3 ; 1 4];
+%periods2compare = [3 4];
 params_reac = [2 1 3];
 xx=0;
 prop_sig_all=[];
-clear PVAL_all RVAL_all
+clear PVAL_all RVAL_all allstats
 figure
 for p = 1 : length(params_reac)
     for pe = 1 : length(periods2compare(:,1))
@@ -239,7 +240,7 @@ for p = 1 : length(params_reac)
 
         dumm = squeeze(all_diff_sig(:,params_reac(p),:))';
         sig_reac_all = [(sum(dumm(time_considered,:))~=0)' (sum(dumm(time_considered2,:))~=0)'];
-        sig = NaN(sum(keep),1);
+        sig = NaN(length(keep),1);
         sig(sig_reac_all(:,1)==1 & sig_reac_all(:,2)==0,1)=false;
         sig(sig_reac_all(:,1)==1 & sig_reac_all(:,2)==1,1)=true;
 
@@ -265,7 +266,7 @@ for p = 1 : length(params_reac)
     data2show = squeeze(prop_sig_all(p,:,:))';
     bb = bar(squeeze(prop_sig_all(p,:,:))');
     for b = 1 : length(bb)
-        set(bb(b),'FaceColor',colorsPeriods(b,:),'DisplayName',periods_reac{b+1,1})
+        set(bb(b),'FaceColor',colorsPeriods(b,:),'DisplayName',periods_reac{periods2compare(b,2),1})
     end
     legend
     set(gca,'Xtick',1:length(area2test),'XtickLabel',area2test,'FontSize',16)
@@ -318,7 +319,7 @@ for p = 1 : length(params_reac)
     subplot(1,3,p);
     bb = bar(RVAL_all{p}); hold on
     for b = 1 : length(bb)
-        set(bb(b),'FaceColor',colorsPeriods(b,:),'DisplayName',periods_reac{b+1,1})
+        set(bb(b),'FaceColor',colorsPeriods(b,:),'DisplayName',periods_reac{periods2compare(b,2),1})
     end
     legend
     set(gca,'Xtick',1:length(area2test),'XtickLabel',area2test,'FontSize',16)
