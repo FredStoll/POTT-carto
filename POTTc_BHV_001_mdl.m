@@ -131,10 +131,6 @@ xlabel('R-adj')
 
 xlim([0 1])
 
-
-nbSigSess(:,2:end)./nbTotSess(:,2:end)
-nbSigSess(:,2:end)
-
 subpl=[3 4 5; 6 7 8];
 for m = 1 : 2
     subplot(1,8,subpl(m,:))
@@ -166,53 +162,56 @@ for m = 1 : 2
 end
 
 % subplot(1,8,3:8)
-%- plot the estimates
-% nbSigSess = [];
-% for m = 1 : 2
-%     clear converge tStat pVal Estimate r_adj LogLik nTr keep 
-%     eval(['ALL = M' num2str(m) '.ALL;']);
-%     for i = 1 : length(ALL)
-%         tStat(:,i) = ALL(i).mdl.Coefficients.tStat;
-%         pVal(:,i) = ALL(i).mdl.Coefficients.pValue;
-%         Estimate(:,i) = ALL(i).mdl.Coefficients.Estimate;
-%         r_adj(:,i) = ALL(i).mdl.Rsquared.Adjusted;
-%         LogLik(:,i) = ALL(i).mdl.LogLikelihood;
-%         converge(:,i) = ALL(i).converge;
-%         nTr(:,i) = height(ALL(i).T);
-%     end
-%     
-%     keep = converge==1  ;
-% 
-%     pVal = pVal(:,keep);
-%     for pp = 1 : length(pVal(:,1))
-%         [h_sig, crit_p, adj_p]=fdr_bh(pVal(pp,:),0.05,'pdep','yes');
-%         nbSigSess(m,pp) = sum(h_sig) ;
-%         nbTotSess(m,pp) = length(h_sig) ;
-%     end
-% 
-%     if m == 1
-%         col = colors(3:4,:);
-%         mm = -0.2;
-%         line([0 0],[0 6],'Color','k');hold on
-%     else
-%         col = colors(9:10,:);
-%         mm = .2;
-%     end
-%     for i  = 1 : length( ALL(1).mdl.CoefficientNames)-1
-%         X= Estimate(i+1,keep);
-%         yl=i+mm;
-%         wdth = .35;
-%         boxplot_ind(X,yl,wdth,col)
-%     end
-%     set(gca,'view',[90 -90],'color','none','FontSize',16);
-%     set(gca,'YTick',1:length(ALL(1).mdl.CoefficientNames)-1,'YTickLabel',ALL(1).mdl.CoefficientNames(2:end),'YTickLabelRotation',25)
-%     disp([sum(keep) length(keep)])
-%     if m == 1
-%         text(19.5,4,['mk M'],'FontSize',16,'Color',col(2,:))
-%     else
-%         text(18,4,['mk X'],'FontSize',16,'Color',col(2,:))
-%     end
-% end
-% xlabel('Estimates')
-% xlim([-20 20])
-% ylim([0 length( ALL(1).mdl.CoefficientNames)])
+figure;
+nbSigSess = [];
+for m = 1 : 2
+    clear converge tStat pVal Estimate r_adj LogLik nTr keep 
+    eval(['ALL = M' num2str(m) '.ALL;']);
+    for i = 1 : length(ALL)
+        tStat(:,i) = ALL(i).mdl.Coefficients.tStat;
+        pVal(:,i) = ALL(i).mdl.Coefficients.pValue;
+        Estimate(:,i) = ALL(i).mdl.Coefficients.Estimate;
+        r_adj(:,i) = ALL(i).mdl.Rsquared.Adjusted;
+        LogLik(:,i) = ALL(i).mdl.LogLikelihood;
+        converge(:,i) = ALL(i).converge;
+        nTr(:,i) = height(ALL(i).T);
+    end
+    
+    keep = converge==1  ;
+
+    pVal = pVal(:,keep);
+    for pp = 1 : length(pVal(:,1))
+        [h_sig, crit_p, adj_p]=fdr_bh(pVal(pp,:),0.05,'pdep','yes');
+        nbSigSess(m,pp) = sum(h_sig) ;
+        nbTotSess(m,pp) = length(h_sig) ;
+    end
+
+    if m == 1
+        col = colors(3:4,:);
+        mm = -0.2;
+        line([0 0],[0 6],'Color','k');hold on
+    else
+        col = colors(9:10,:);
+        mm = .2;
+    end
+    for i  = 1 : length( ALL(1).mdl.CoefficientNames)-1
+        X= Estimate(i+1,keep);
+        yl=i+mm;
+        wdth = .35;
+        boxplot_ind(X,yl,wdth,col)
+    end
+    set(gca,'view',[90 -90],'color','none','FontSize',16);
+    set(gca,'YTick',1:length(ALL(1).mdl.CoefficientNames)-1,'YTickLabel',ALL(1).mdl.CoefficientNames(2:end),'YTickLabelRotation',25)
+    disp([sum(keep) length(keep)])
+    if m == 1
+        text(19.5,4,['mk M'],'FontSize',16,'Color',col(2,:))
+    else
+        text(18,4,['mk X'],'FontSize',16,'Color',col(2,:))
+    end
+end
+xlabel('Estimates')
+xlim([-5 20])
+ylim([0 length( ALL(1).mdl.CoefficientNames)])
+
+
+nbSigSess./nbTotSess
